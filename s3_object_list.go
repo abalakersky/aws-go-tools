@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 //	"os"
+	"time"
 	"flag"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -12,7 +13,7 @@ import (
 )
 
 func main() {
-//	bucket := os.Args[1:]
+	t := time.Now()
 	bucket := flag.String("bucket", "test", "Bucket Name to list objects from")
 	flag.Parse()
 //	fmt.Printf("Your bucket name is %q", *bucket)
@@ -24,7 +25,7 @@ func main() {
 		return
 	}
 
-//	log.Println("Objects:")
+	fmt.Printf("Here are the objects in %q bucket on %s\n\n", *bucket, t.Format(time.RFC1123))
 //	fmt.Println(result)
 	for _, object := range result.Contents {
 		fmt.Printf("%s\n", *object.Key)
