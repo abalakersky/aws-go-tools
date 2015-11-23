@@ -1,14 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"flag"
-	"time"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"fmt"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/credentials"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/session"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/service/s3"
 	"sync"
+	"time"
 )
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 	keysCh := make(chan string, 10)
 
 	svc := s3.New(session.New(&aws.Config{
-		Region: region,
+		Region:      region,
 		Credentials: credentials.NewSharedCredentials("", *creds),
 	}))
 

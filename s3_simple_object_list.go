@@ -1,15 +1,15 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
-	"flag"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/credentials"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/session"
+	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/service/s3"
 )
 
 func main() {
