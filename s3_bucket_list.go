@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws"
-	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/session"
-	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 func main() {

@@ -2,33 +2,52 @@ package main
 
 import (
 	"fmt"
-	"log"
-	//	"os"
 	"flag"
-	"time"
-
-	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws"
-	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/session"
-	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"sync"
 )
 
 func main() {
-	t := time.Now()
 	bucket := flag.String("bucket", "test", "Bucket Name to list objects from")
 	region := flag.String("region", "us-east-1", "Region to connect to.")
+	creds := flag.String("creds", "default", "Credentials Profile to use")
 	flag.Parse()
-	//	fmt.Printf("Your bucket name is %q", *bucket)
+	var wg sync.WaitGroup
+	keysCh := make(chan string, 10)
 
-	svc := s3.New(session.New(&aws.Config{Region: region}))
-	result, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket})
-	if err != nil {
-		log.Println("Failed to list objects", err)
-		return
+	svc := s3.New(session.New(&aws.Config{
+		Region:      region,
+		Credentials: credentials.NewSharedCredentials("", *creds),
+	}))
+
+	params := &s3.ListObjectsInput{
+		Bucket: bucket,
 	}
+	wg.Add(1)
+	go func(param *s3.ListObjectsInput) {
+		defer wg.Done()
 
-	fmt.Printf("Here are the objects in %q bucket on %s\n\n", *bucket, t.Format(time.RFC1123))
-	//	fmt.Println(result)
-	for _, object := range result.Contents {
-		fmt.Printf("%s\n", *object.Key)
+		err := svc.ListObjectsPages(params,
+			func(page *s3.ListObjectsOutput, last bool) bool {
+				for _, object := range page.Contents {
+					//keysCh <- fmt.Sprintf("%s:%s", *params.Bucket, *object.Key)
+					keysCh <- fmt.Sprintf("%s", *object.Key)
+				}
+				return true
+			},
+		)
+		if err != nil {
+			fmt.Println("Error listing", *bucket, "Objects:", err)
+		}
+	}(params)
+	go func() {
+		wg.Wait()
+		close(keysCh)
+	}()
+	for key := range keysCh {
+		fmt.Println(key)
 	}
 }
