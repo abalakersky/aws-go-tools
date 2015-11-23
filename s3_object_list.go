@@ -12,13 +12,12 @@ import (
 )
 
 func main() {
-	t := time.Now()
-	ti := t.Format(time.RFC1123)
-	bucket := flag.String("bucket", ti, "Bucket Name to list objects from")
+	t := fmt.Sprintf("%v", time.Now().Unix())
+	bucket := flag.String("bucket", t, "Bucket Name to list objects from")
 	region := flag.String("region", "us-east-1", "Region to connect to.")
 	creds := flag.String("creds", "default", "Credentials Profile to use")
 	flag.Parse()
-	if *bucket == ti {
+	if *bucket == t {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
 		return
 	}
