@@ -8,16 +8,14 @@ import (
 	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/session"
 	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/service/s3"
 	"sync"
-	"time"
 )
 
 func main() {
-	t := fmt.Sprintf("%v", time.Now().Unix())
-	bucket := flag.String("bucket", t, "Bucket Name to list objects from")
+	bucket := flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
 	region := flag.String("region", "us-east-1", "Region to connect to.")
 	creds := flag.String("creds", "default", "Credentials Profile to use")
 	flag.Parse()
-	if *bucket == t {
+	if *bucket == "" {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
 		return
 	}
