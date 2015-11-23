@@ -15,10 +15,11 @@ import (
 func main() {
 	t := time.Now()
 	bucket := flag.String("bucket", "test", "Bucket Name to list objects from")
+	region := flag.String("region", "us-east-1", "Region to connect to.")
 	flag.Parse()
 	//	fmt.Printf("Your bucket name is %q", *bucket)
 
-	svc := s3.New(session.New(&aws.Config{Region: aws.String("us-east-1")}))
+	svc := s3.New(session.New(&aws.Config{Region: region}))
 	result, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket})
 	if err != nil {
 		log.Println("Failed to list objects", err)
