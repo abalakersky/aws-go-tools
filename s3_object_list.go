@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"flag"
+	"time"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -11,15 +12,21 @@ import (
 )
 
 func main() {
-	bucket := flag.String("bucket", "test", "Bucket Name to list objects from")
+	t := time.Now()
+	ti := t.Format(time.RFC1123)
+	bucket := flag.String("bucket", ti, "Bucket Name to list objects from")
 	region := flag.String("region", "us-east-1", "Region to connect to.")
 	creds := flag.String("creds", "default", "Credentials Profile to use")
 	flag.Parse()
+	if *bucket == ti {
+		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
+		return
+	}
 	var wg sync.WaitGroup
 	keysCh := make(chan string, 10)
 
 	svc := s3.New(session.New(&aws.Config{
-		Region:      region,
+		Region: region,
 		Credentials: credentials.NewSharedCredentials("", *creds),
 	}))
 
