@@ -99,16 +99,19 @@ func main() {
 		}
 
 		for i := range a.Prefixes {
-			if *service != "" && *region != "" {
+			switch {
+			case *service != "" && *region != "" :
 				if a.Prefixes[i].Service == *service && a.Prefixes[i].Region == *region {
 					fmt.Printf("%s\n", a.Prefixes[i].IPPrefix)
 				}
-			}
-			if *service != "" && *region == "" {
+			case *service != "" && *region == "" :
 				if a.Prefixes[i].Service == *service {
 					fmt.Printf("%s\n", a.Prefixes[i].IPPrefix)
 				}
 			}
+		}
+		if *service == "" && *region != "" {
+			fmt.Printf("\nService is a required value\n\n")
 		}
 
 	}
