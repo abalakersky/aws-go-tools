@@ -93,10 +93,10 @@ func main() {
 		sort.Strings(regions)
 
 		flag.Usage = u
+		flag.Parse()
 		if flag.NFlag() == 0 {
 			u()
 		}
-		flag.Parse()
 
 		for i := range a.Prefixes {
 			if *service != "" && *region != "" {
