@@ -8,6 +8,10 @@ import (
 	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/aws/session"
 	"my_tools/Godeps/_workspace/src/github.com/aws/aws-sdk-go/service/s3"
 	"sync"
+	"bufio"
+	"os"
+	"log"
+	"path/filepath"
 )
 
 func main() {
@@ -19,6 +23,17 @@ func main() {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
 		return
 	}
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(dir)
+	f, err := os.Create(dir + "/manifester.log")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
 	var wg sync.WaitGroup
 	keysCh := make(chan string, 10)
 
@@ -51,7 +66,10 @@ func main() {
 		wg.Wait()
 		close(keysCh)
 	}()
+	w := bufio.NewWriter(f)
 	for key := range keysCh {
 		fmt.Println(key)
+		w.WriteString(key + "\n")
 	}
+	w.Flush()
 }
