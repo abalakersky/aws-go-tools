@@ -14,11 +14,15 @@ import (
 
 func main() {
 	t := time.Now()
-	bucket := flag.String("bucket", "test", "Bucket Name to list objects from")
+	bucket := flag.String("bucket", "", "Bucket Name to list objects from")
 	region := flag.String("region", "us-east-1", "Region to connect to.")
 	creds := flag.String("creds", "default", "Credentials Profile to use")
 	flag.Parse()
 	//	fmt.Printf("Your bucket name is %q", *bucket)
+	if *bucket == "" {
+		fmt.Println("\n" + "You must specify bucket name" + "\n")
+		return
+	}
 
 	svc := s3.New(session.New(&aws.Config{
 		Region:      region,
