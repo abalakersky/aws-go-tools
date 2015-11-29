@@ -36,9 +36,9 @@ func main() {
 	}
 
 	fmt.Printf("Here are the objects in %q bucket on %s\n\n", *bucket, t.Format(time.RFC1123))
-		fmt.Println(result)
-//	for _, object := range result.Contents {
-//		fmt.Printf("%s\n", *object.Key)
-//		fmt.Printf(*result)
-//	}
+	fmt.Println(result)
+	//	for _, object := range result.Contents {
+	//		fmt.Printf("%s\n", *object.Key)
+	//		fmt.Printf(*result)
+	//	}
 }
