@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+	"strconv"
 	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
@@ -12,12 +14,20 @@ import (
 	"os"
 	"log"
 	"path/filepath"
+	"strings"
 )
 
+func CaseInsesitiveContains (s, substr string) bool {
+	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
+	return strings.Contains(s, substr)
+}
+
 func main() {
+	t := time.Now()
 	bucket := flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
 	region := flag.String("region", "us-east-1", "Region to connect to.")
 	creds := flag.String("creds", "default", "Credentials Profile to use")
+	search := flag.String("search", "", "Search string to find in object paths")
 	flag.Parse()
 	if *bucket == "" {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
@@ -27,8 +37,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(dir)
-	f, err := os.Create(dir + "/manifester.log")
+	name := dir + "/" + *bucket + "_" + *search + strconv.FormatInt(t.Unix(), 10) + ".log"
+	f, err := os.Create(name)
 	if err != nil {
 		panic(err)
 	}
@@ -68,8 +78,18 @@ func main() {
 	}()
 	w := bufio.NewWriter(f)
 	for key := range keysCh {
-		fmt.Println(key)
-		w.WriteString(key + "\n")
+		switch  {
+		case *search == "" :
+			fmt.Println(key)
+			w.WriteString(key + "\n")
+		case *search != "" :
+			if CaseInsesitiveContains(key, *search) == true {
+				fmt.Println(key)
+				w.WriteString(key + "\n")
+			} else {
+				continue
+			}
+		}
 	}
 	w.Flush()
 }
