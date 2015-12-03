@@ -33,10 +33,19 @@ func main() {
 
 //	fmt.Println(result)
 	for _, commonPrefix := range result.CommonPrefixes {
-		fmt.Println("Prefix:", *commonPrefix.Prefix)
+		fmt.Println("Directories:", *commonPrefix.Prefix)
 	}
 	for _, keys := range result.Contents {
-		fmt.Println("Key:", *keys.Key)
+		fmt.Println("Files:", *keys.Key)
+	}
+
+	newList, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket, Prefix: aws.String("Rick/")})
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for _, newKeys := range newList.Contents {
+		fmt.Println("Key: ", *newKeys.Key)
 	}
 
 }
