@@ -8,12 +8,31 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"flag"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"strings"
 )
 
-func main() {
-	svc := s3.New(session.New())
+var (
+	bucket = flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
+	region = flag.String("region", "us-east-1", "Region to connect to.")
+	creds = flag.String("creds", "default", "Credentials Profile to use")
+	search = flag.String("search", "", "Search string to find in object paths")
+)
 
-	bucket := "mybucket"
+func CaseInsesitiveContains (s, substr string) bool {
+	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
+	return strings.Contains(s, substr)
+}
+
+func main() {
+	flag.Parse()
+	svc := s3.New(session.New(&aws.Config{
+		Region:      region,
+		Credentials: credentials.NewSharedCredentials("", *creds),
+	}))
+
+//	bucket := "pso-training"
 	numWorkers := 5
 
 	prefixCh := make(chan string, numWorkers)
@@ -23,7 +42,7 @@ func main() {
 		// Spin up each worker
 		wg.Add(1)
 		go func() {
-			listObjectsWorker(objCh, prefixCh, bucket, svc)
+			listObjectsWorker(objCh, prefixCh, *bucket, svc)
 			wg.Done()
 		}()
 	}
@@ -34,7 +53,7 @@ func main() {
 	}()
 
 	go func() {
-		if err := getBucketCommonPrefixes(prefixCh, bucket, svc); err != nil {
+		if err := getBucketCommonPrefixes(prefixCh, *bucket, svc); err != nil {
 			fmt.Println("error getting bucket common prefixes", err)
 		}
 		// Close prefixCh so workers will know when to stop
@@ -49,17 +68,31 @@ func main() {
 
 func listObjectsWorker(objCh chan<- *s3.Object, prefixCh <-chan string, bucket string, svc s3iface.S3API) {
 	for prefix := range prefixCh {
-		result, err := svc.ListObjects(&s3.ListObjectsInput{
-			Bucket: &bucket, Delimiter: aws.String("/"),
+		params := &s3.ListObjectsInput{
+			Bucket: &bucket,
 			Prefix: &prefix,
-		})
+			Delimiter: aws.String("/"),
+		}
+		err := svc.ListObjectsPages(params,
+			func(page *s3.ListObjectsOutput, last bool) bool {
+				for _, object := range page.Contents {
+					objCh <- object
+				}
+				return true
+			},
+		)
+
+//		result, err := svc.ListObjectsPages(&s3.ListObjectsInput{
+//			Bucket: &bucket, Delimiter: aws.String("/"),
+//			Prefix: &prefix,
+//		}),
 		if err != nil {
 			fmt.Println("failed to list objects by prefix", prefix, err)
 			continue
 		}
-		for _, obj := range result.Contents {
-			objCh <- obj
-		}
+//		for _, obj := range result.Contents {
+//			objCh <- obj
+//		}
 	}
 }
 
