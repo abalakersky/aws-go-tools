@@ -10,12 +10,12 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"sync"
-	"bufio"
 	"os"
 	"log"
 	"path/filepath"
-	"strings"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"bufio"
+	"strings"
 )
 
 var (
@@ -25,52 +25,38 @@ var (
 	search = flag.String("search", "", "Search string to find in object paths")
 	t = time.Now()
 	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
-	name = dir + "/" + *bucket + "_" + *search + strconv.FormatInt(t.Unix(), 10) + ".log"
+	name = dir + "/" + strconv(*bucket) + "_" + strconv(*search) + strconv.FormatInt(t.Unix(), 10) + ".log"
 )
 
-func prefixes (bucket string , svc s3iface.S3API) {
-	topLevel, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket, Delimiter: aws.String("/")})
-	if err != nil {
-		log.Println("Failed to list Top Level objects", err)
-		return
-	}
-	var P []string
-	var K []string
-	for _, commonPrefix := range topLevel.CommonPrefixes {
-		P = append(P, *commonPrefix.Prefix)
-//		fmt.Println("Directories:", *commonPrefix.Prefix)
-	}
-	for _, contentKeys := range topLevel.Contents {
-		K = append(K, *contentKeys.Key)
-	}
 
-	return P
-	return K
+func listObjectsWorker(objCh chan <- *s3.Object, prefix string, bucket *string, svc s3iface.S3API) {
+	params := &s3.ListObjectsInput{
+		Bucket: bucket,
+		Prefix: &prefix,
+	}
+	err := svc.ListObjectsPages(params,
+		func(page *s3.ListObjectsOutput, last bool) bool {
+			for _, object := range page.Contents {
+				objCh <- object
+			}
+			return true
+		},
+	)
+
+	if err != nil {
+		fmt.Println("failed to list objects by prefix", prefix, err)
+	}
 }
 
-func listObjectsWorker(objCh chan<- *s3.Object, prefix string, bucket string, svc s3iface.S3API) {
-		params := &s3.ListObjectsInput{
-			Bucket: &bucket,
-			Prefix: &prefix,
-		}
-		err := svc.ListObjectsPages(params,
-			func(page *s3.ListObjectsOutput, last bool) bool {
-				for _, object := range page.Contents {
-					objCh <- object
-				}
-				return true
-			},
-		)
-
-		if err != nil {
-			fmt.Println("failed to list objects by prefix", prefix, err)
-		}
-	}
+func caseInsesitiveContains (s, substr string) bool {
+	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
+	return strings.Contains(s, substr)
+}
 
 func main() {
 	flag.Parse()
 	svc := s3.New(session.New(&aws.Config{
-		Region:      *region,
+		Region:      region,
 		Credentials: credentials.NewSharedCredentials("", *creds),
 	}))
 
@@ -79,12 +65,53 @@ func main() {
 		return
 	}
 
-	prefixes(*bucket, svc)
+	f, err := os.Create(name)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
 
-	objCh := make(chan *s3.Object, 100)
+	topLevel, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket, Delimiter: aws.String("/")})
+	if err != nil {
+		log.Println("Failed to list Top Level objects", err)
+		return
+	}
+	for _, contentKeys := range topLevel.Contents {
+		fmt.Println(*contentKeys.Key)
+	}
+
+	objCh := make(chan *s3.Object, 10)
 	var wg sync.WaitGroup
 
-	for _, prefix := range prefixes(*bucket, svc) {
-		fmt.Println("Directories:", *commonPrefix.Prefix)
+	for _, commonPrefix := range topLevel.CommonPrefixes {
+//		fmt.Println(commonPrefix.Prefix)
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			listObjectsWorker(objCh, *commonPrefix.Prefix, bucket, svc)
+		}()
+		go func() {
+			wg.Wait()
+			close(objCh)
+		}()
 	}
+//	for obj := range objCh {
+//		fmt.Println(*obj.Key)
+//	}
+	w := bufio.NewWriter(f)
+	for obj := range objCh {
+		switch  {
+		case *search == "" :
+//			fmt.Println(*obj.Key)
+			w.WriteString(*obj.Key + "\n")
+		case *search != "" :
+			if caseInsesitiveContains(*obj.Key, *search) == true {
+				fmt.Println(*obj.Key)
+				w.WriteString(*obj.Key + "\n")
+			} else {
+				continue
+			}
+		}
+	}
+	w.Flush()
 }
