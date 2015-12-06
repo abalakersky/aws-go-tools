@@ -1,35 +1,33 @@
 package main
 
 import (
-	"time"
-	"strconv"
+	"bufio"
 	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"sync"
-	"os"
-	"log"
-	"path/filepath"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"bufio"
+	"log"
+	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
+	"sync"
+	"time"
 )
 
 var (
 	bucket = flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
 	region = flag.String("region", "us-east-1", "Region to connect to.")
-	creds = flag.String("creds", "default", "Credentials Profile to use")
+	creds  = flag.String("creds", "default", "Credentials Profile to use")
 	search = flag.String("search", "", "Search string to find in object paths")
-	t = time.Now()
+	t      = time.Now()
 	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
-	name = dir + "/" + strconv(*bucket) + "_" + strconv(*search) + strconv.FormatInt(t.Unix(), 10) + ".log"
 )
 
-
-func listObjectsWorker(objCh chan <- *s3.Object, prefix string, bucket *string, svc s3iface.S3API) {
+func listObjectsWorker(objCh chan<- *s3.Object, prefix string, bucket *string, svc s3iface.S3API) {
 	params := &s3.ListObjectsInput{
 		Bucket: bucket,
 		Prefix: &prefix,
@@ -48,7 +46,7 @@ func listObjectsWorker(objCh chan <- *s3.Object, prefix string, bucket *string, 
 	}
 }
 
-func caseInsesitiveContains (s, substr string) bool {
+func caseInsesitiveContains(s, substr string) bool {
 	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
 	return strings.Contains(s, substr)
 }
@@ -64,6 +62,8 @@ func main() {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
 		return
 	}
+
+	name := dir + "/" + *bucket + "_" + strconv.FormatInt(t.Unix(), 10) + ".log"
 
 	f, err := os.Create(name)
 	if err != nil {
@@ -84,7 +84,7 @@ func main() {
 	var wg sync.WaitGroup
 
 	for _, commonPrefix := range topLevel.CommonPrefixes {
-//		fmt.Println(commonPrefix.Prefix)
+		//		fmt.Println(commonPrefix.Prefix)
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -95,16 +95,17 @@ func main() {
 			close(objCh)
 		}()
 	}
-//	for obj := range objCh {
-//		fmt.Println(*obj.Key)
-//	}
+	//	for obj := range objCh {
+	//		fmt.Println(*obj.Key)
+	//	}
 	w := bufio.NewWriter(f)
 	for obj := range objCh {
-		switch  {
-		case *search == "" :
-//			fmt.Println(*obj.Key)
-			w.WriteString(*obj.Key + "\n")
-		case *search != "" :
+		switch {
+		case *search == "":
+			//			fmt.Println(*obj.Key)
+			//			w.WriteString(*obj.Key + "\n")
+			fmt.Fprintln(w, *obj.Key)
+		case *search != "":
 			if caseInsesitiveContains(*obj.Key, *search) == true {
 				fmt.Println(*obj.Key)
 				w.WriteString(*obj.Key + "\n")

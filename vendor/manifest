@@ -4,7 +4,7 @@
 		{
 			"importpath": "github.com/aws/aws-sdk-go",
 			"repository": "https://github.com/aws/aws-sdk-go",
-			"revision": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8",
+			"revision": "d4677067b535e7a06201ce491b41f4b73dcc73a9",
 			"branch": "master"
 		},
 		{
@@ -17,7 +17,7 @@
 		{
 			"importpath": "github.com/go-ini/ini",
 			"repository": "https://github.com/go-ini/ini",
-			"revision": "03e0e7d51a13a91c765d8d0161246bc14a38001a",
+			"revision": "65f8c749131183c3b34fcb87d6f79b958d3318c7",
 			"branch": "v1"
 		},
 		{
@@ -48,42 +48,42 @@
 		{
 			"importpath": "github.com/stretchr/testify/assert",
 			"repository": "https://github.com/stretchr/testify",
-			"revision": "d797d25e0fa6d53be3b1a216d24e868d6a1912ef",
+			"revision": "a1f97990ddc16022ec7610326dd9bce31332c116",
 			"branch": "master",
 			"path": "/assert"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/ast/astutil",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "fff8fd7b194011cfedeafda246f0bfc275abb904",
+			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
 			"branch": "master",
 			"path": "/go/ast/astutil"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/buildutil",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "fff8fd7b194011cfedeafda246f0bfc275abb904",
+			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
 			"branch": "master",
 			"path": "/go/buildutil"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/exact",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "fff8fd7b194011cfedeafda246f0bfc275abb904",
+			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
 			"branch": "master",
 			"path": "/go/exact"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/loader",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "fff8fd7b194011cfedeafda246f0bfc275abb904",
+			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
 			"branch": "master",
 			"path": "/go/loader"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/types",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "fff8fd7b194011cfedeafda246f0bfc275abb904",
+			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
 			"branch": "master",
 			"path": "/go/types"
 		}
