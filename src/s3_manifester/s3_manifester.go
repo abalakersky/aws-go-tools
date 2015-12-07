@@ -21,30 +21,12 @@ import (
 var (
 	bucket = flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
 	region = flag.String("region", "us-east-1", "Region to connect to.")
-	creds  = flag.String("creds", "default", "Credentials Profile to use")
+	creds = flag.String("creds", "default", "Credentials Profile to use")
 	search = flag.String("search", "", "Search string to find in object paths")
-	t      = time.Now()
+	t = time.Now()
 	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
 )
 
-func listObjectsWorker(objCh chan<- *s3.Object, prefix string, bucket *string, svc s3iface.S3API) {
-	params := &s3.ListObjectsInput{
-		Bucket: bucket,
-		Prefix: &prefix,
-	}
-	err := svc.ListObjectsPages(params,
-		func(page *s3.ListObjectsOutput, last bool) bool {
-			for _, object := range page.Contents {
-				objCh <- object
-			}
-			return true
-		},
-	)
-
-	if err != nil {
-		fmt.Println("failed to list objects by prefix", prefix, err)
-	}
-}
 
 func caseInsesitiveContains(s, substr string) bool {
 	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
@@ -70,6 +52,7 @@ func main() {
 		panic(err)
 	}
 	defer f.Close()
+	w := bufio.NewWriter(f)
 
 	topLevel, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket, Delimiter: aws.String("/")})
 	if err != nil {
@@ -77,38 +60,60 @@ func main() {
 		return
 	}
 	for _, contentKeys := range topLevel.Contents {
-		fmt.Println(*contentKeys.Key)
+		fmt.Fprintln(w, *contentKeys.Key)
+		//		fmt.Println(*contentKeys.Key)
+	}
+
+	var prefixes []string
+	for _, commonPrefix := range topLevel.CommonPrefixes {
+		prefixes = append(prefixes, *commonPrefix.Prefix)
 	}
 
 	objCh := make(chan *s3.Object, 10)
 	var wg sync.WaitGroup
 
-	for _, commonPrefix := range topLevel.CommonPrefixes {
-		//		fmt.Println(commonPrefix.Prefix)
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			listObjectsWorker(objCh, *commonPrefix.Prefix, bucket, svc)
-		}()
-		go func() {
-			wg.Wait()
-			close(objCh)
-		}()
+	listObjectsWorker := func(objCh chan <- *s3.Object, prefix string, bucket *string, svc s3iface.S3API) {
+		params := &s3.ListObjectsInput{
+			Bucket: bucket,
+			Prefix: &prefix,
+		}
+		err := svc.ListObjectsPages(params,
+			func(page *s3.ListObjectsOutput, last bool) bool {
+				for _, object := range page.Contents {
+					objCh <- object
+					//				objCh <- fmt.Sprintf("%s", *object.Key)
+				}
+				return true
+			},
+		)
+
+		if err != nil {
+			fmt.Println("failed to list objects by prefix", prefix, err)
+		}
+		wg.Done()
 	}
-	//	for obj := range objCh {
-	//		fmt.Println(*obj.Key)
-	//	}
-	w := bufio.NewWriter(f)
+
+	wg.Add(len(prefixes))
+
+	for i := range prefixes {
+		prefix := prefixes[i]
+		go listObjectsWorker(objCh, prefix, bucket, svc)
+	}
+
+	go func() {
+		wg.Wait()
+		close(objCh)
+	}()
+
 	for obj := range objCh {
 		switch {
 		case *search == "":
-			//			fmt.Println(*obj.Key)
-			//			w.WriteString(*obj.Key + "\n")
 			fmt.Fprintln(w, *obj.Key)
+//				fmt.Println(*obj.Key)
 		case *search != "":
 			if caseInsesitiveContains(*obj.Key, *search) == true {
-				fmt.Println(*obj.Key)
-				w.WriteString(*obj.Key + "\n")
+				fmt.Fprintln(w, *obj.Key)
+//				fmt.Println(*obj.Key)
 			} else {
 				continue
 			}
