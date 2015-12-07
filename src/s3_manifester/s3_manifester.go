@@ -44,8 +44,12 @@ func main() {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
 		return
 	}
+	var s string
+	if *search != "" {
+		s = *search
+	}
 
-	name := dir + "/" + *bucket + "_" + strconv.FormatInt(t.Unix(), 10) + ".log"
+	name := dir + "/" + *bucket + "_" + s + "_" + strconv.FormatInt(t.Unix(), 10) + ".log"
 
 	f, err := os.Create(name)
 	if err != nil {
@@ -60,8 +64,16 @@ func main() {
 		return
 	}
 	for _, contentKeys := range topLevel.Contents {
-		fmt.Fprintln(w, *contentKeys.Key)
-		//		fmt.Println(*contentKeys.Key)
+		switch {
+		case *search == "":
+			fmt.Fprintln(w, *contentKeys.Key)
+		case *search != "":
+			if caseInsesitiveContains(*contentKeys.Key, *search) == true {
+				fmt.Fprintln(w, *contentKeys.Key)
+			} else {
+				continue
+			}
+		}
 	}
 
 	var prefixes []string
@@ -81,7 +93,7 @@ func main() {
 			func(page *s3.ListObjectsOutput, last bool) bool {
 				for _, object := range page.Contents {
 					objCh <- object
-					//				objCh <- fmt.Sprintf("%s", *object.Key)
+//				objCh <- fmt.Sprintf("%s", *object.Key)
 				}
 				return true
 			},
