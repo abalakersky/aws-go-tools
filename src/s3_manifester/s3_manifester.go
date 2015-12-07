@@ -80,7 +80,7 @@ func main() {
 		prefixes = append(prefixes, *commonPrefix.Prefix)
 	}
 
-	objCh := make(chan *s3.Object, 10)
+	objCh := make(chan *s3.Object, 100)
 	var wg sync.WaitGroup
 
 	listObjectsWorker := func(objCh chan<- *s3.Object, prefix string, bucket *string, svc s3iface.S3API) {
