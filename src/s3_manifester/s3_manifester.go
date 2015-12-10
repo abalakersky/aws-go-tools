@@ -20,11 +20,13 @@ import (
 
 var (
 	bucket = flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
+	logFile = flag.String("file", "yes", "Save output to file instead of displaying on the screen")
 	region = flag.String("region", "us-east-1", "Region to connect to.")
 	creds  = flag.String("creds", "default", "Credentials Profile to use")
 	search = flag.String("search", "", "Search string to find in object paths")
 	t      = time.Now()
 	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
+	w = bufio.NewWriter(os.Stdout)
 )
 
 func caseInsesitiveContains(s, substr string) bool {
@@ -43,19 +45,25 @@ func main() {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
 		return
 	}
-	var s string
-	if *search != "" {
-		s = *search
+
+
+	if *logFile == "yes" {
+		var s string
+		if *search != "" {
+			s = *search
+		}
+
+		name := dir + "/" + *bucket + "_" + s + "_" + strconv.FormatInt(t.Unix(), 10) + ".log"
+
+		f, err := os.Create(name)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		w = bufio.NewWriter(f)
 	}
 
-	name := dir + "/" + *bucket + "_" + s + "_" + strconv.FormatInt(t.Unix(), 10) + ".log"
 
-	f, err := os.Create(name)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-	w := bufio.NewWriter(f)
 
 	topLevel, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket, Delimiter: aws.String("/")})
 	if err != nil {
