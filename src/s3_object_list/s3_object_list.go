@@ -1,23 +1,24 @@
 package main
 
 import (
-	"time"
-	"strconv"
+	"bufio"
 	"flag"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"sync"
-	"bufio"
-	"os"
-	"log"
-	"path/filepath"
-	"strings"
 )
 
-func CaseInsesitiveContains (s, substr string) bool {
+func caseInsesitiveContains(s, substr string) bool {
 	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
 	return strings.Contains(s, substr)
 }
@@ -78,14 +79,16 @@ func main() {
 	}()
 	w := bufio.NewWriter(f)
 	for key := range keysCh {
-		switch  {
-		case *search == "" :
-			fmt.Println(key)
-			w.WriteString(key + "\n")
-		case *search != "" :
-			if CaseInsesitiveContains(key, *search) == true {
-				fmt.Println(key)
-				w.WriteString(key + "\n")
+		switch {
+		case *search == "":
+			// fmt.Println(key)
+			fmt.Fprintln(w, key)
+			// w.WriteString(key + "\n")
+		case *search != "":
+			if caseInsesitiveContains(key, *search) == true {
+				// fmt.Println(key)
+				fmt.Fprintln(w, key)
+				// w.WriteString(key + "\n")
 			} else {
 				continue
 			}
