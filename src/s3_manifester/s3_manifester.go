@@ -31,7 +31,7 @@ var (
 	w = bufio.NewWriter(os.Stdout)
 )
 
-func caseInsesitiveContains(s, substr string) bool {
+func caseInsensitiveContains(s, substr string) bool {
 	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
 	return strings.Contains(s, substr)
 }
@@ -87,7 +87,7 @@ func main() {
 		case *search == "":
 			fmt.Fprintln(w, *contentKeys.Key)
 		case *search != "":
-			if caseInsesitiveContains(*contentKeys.Key, *search) == true {
+			if caseInsensitiveContains(*contentKeys.Key, *search) == true {
 				fmt.Fprintln(w, *contentKeys.Key)
 			} else {
 				continue
@@ -141,7 +141,7 @@ func main() {
 		case *search == "":
 			fmt.Fprintln(w, *obj.Key)
 		case *search != "":
-			if caseInsesitiveContains(*obj.Key, *search) == true {
+			if caseInsensitiveContains(*obj.Key, *search) == true {
 				fmt.Fprintln(w, *obj.Key)
 			} else {
 				continue
