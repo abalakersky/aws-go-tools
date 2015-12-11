@@ -52,10 +52,6 @@ func main() {
 			Credentials: credentials.NewSharedCredentials("", *creds),
 		}))
 	}
-//	svc = s3.New(session.New(&aws.Config{
-//		Region:      region,
-//		Credentials: credentials.NewSharedCredentials("", *creds),
-//	}))
 
 	if *bucket == "" {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
