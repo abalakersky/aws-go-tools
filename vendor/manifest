@@ -4,7 +4,7 @@
 		{
 			"importpath": "github.com/aws/aws-sdk-go",
 			"repository": "https://github.com/aws/aws-sdk-go",
-			"revision": "d4677067b535e7a06201ce491b41f4b73dcc73a9",
+			"revision": "999b1591218c36d5050d1ba7266eba956e65965f",
 			"branch": "master"
 		},
 		{
@@ -17,13 +17,13 @@
 		{
 			"importpath": "github.com/go-ini/ini",
 			"repository": "https://github.com/go-ini/ini",
-			"revision": "65f8c749131183c3b34fcb87d6f79b958d3318c7",
+			"revision": "9314fb0ef64171d6a3d0a4fa570dfa33441cba05",
 			"branch": "v1"
 		},
 		{
 			"importpath": "github.com/jmespath/go-jmespath",
 			"repository": "https://github.com/jmespath/go-jmespath",
-			"revision": "3433f3ea46d9f8019119e7dd41274e112a2359a9",
+			"revision": "c01cf91b011868172fdcd9f41838e80c9d716264",
 			"branch": "master"
 		},
 		{
@@ -35,7 +35,7 @@
 		{
 			"importpath": "github.com/pmezard/go-difflib/difflib",
 			"repository": "https://github.com/pmezard/go-difflib",
-			"revision": "d8ed2627bdf02c080bf22230dbb337003b7aba2d",
+			"revision": "e8554b8641db39598be7f6342874b958f12ae1d4",
 			"branch": "master",
 			"path": "/difflib"
 		},
@@ -48,7 +48,7 @@
 		{
 			"importpath": "github.com/stretchr/testify/assert",
 			"repository": "https://github.com/stretchr/testify",
-			"revision": "a1f97990ddc16022ec7610326dd9bce31332c116",
+			"revision": "e3a8ff8ce36581f87a15341206f205b1da467059",
 			"branch": "master",
 			"path": "/assert"
 		},
