@@ -112,10 +112,11 @@ func main() {
 		wg.Done()
 	}
 
-	wg.Add(len(prefixes))
+//	wg.Add(len(prefixes))
 
 	for i := range prefixes {
 		prefix := prefixes[i]
+		wg.Add(1)
 		go listObjectsWorker(objCh, prefix, bucket, svc)
 	}
 
