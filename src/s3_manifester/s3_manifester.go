@@ -124,7 +124,6 @@ func main() {
 		wg.Done()
 	}
 
-//	wg.Add(len(prefixes))
 
 	for i := range prefixes {
 		prefix := prefixes[i]
@@ -141,11 +140,9 @@ func main() {
 		switch {
 		case *search == "":
 			fmt.Fprintln(w, *obj.Key)
-			//				fmt.Println(*obj.Key)
 		case *search != "":
 			if caseInsesitiveContains(*obj.Key, *search) == true {
 				fmt.Fprintln(w, *obj.Key)
-				//				fmt.Println(*obj.Key)
 			} else {
 				continue
 			}
