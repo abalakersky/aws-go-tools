@@ -24,6 +24,8 @@ var (
 	region = flag.String("region", "us-east-1", "Region to connect to.")
 	creds  = flag.String("creds", "default", "Credentials Profile to use")
 	search = flag.String("search", "", "Search string to find in object paths")
+	akid = flag.String("akid", "", "AWS Access Key")
+	secKey = flag.String("seckey", "", "AWS Secret Access Key")
 	t      = time.Now()
 	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
 	w = bufio.NewWriter(os.Stdout)
@@ -36,10 +38,24 @@ func caseInsesitiveContains(s, substr string) bool {
 
 func main() {
 	flag.Parse()
-	svc := s3.New(session.New(&aws.Config{
-		Region:      region,
-		Credentials: credentials.NewSharedCredentials("", *creds),
-	}))
+
+	var svc = s3.New(session.New())
+
+	if *akid != "" && *secKey != "" {
+		svc = s3.New(session.New(&aws.Config{
+			Region:      region,
+			Credentials: credentials.NewStaticCredentials(*akid, *secKey, ""),
+		}))
+	} else {
+		svc = s3.New(session.New(&aws.Config{
+			Region:      region,
+			Credentials: credentials.NewSharedCredentials("", *creds),
+		}))
+	}
+//	svc = s3.New(session.New(&aws.Config{
+//		Region:      region,
+//		Credentials: credentials.NewSharedCredentials("", *creds),
+//	}))
 
 	if *bucket == "" {
 		fmt.Printf("\n%s\n\n", "You Need to specify name of the Bucket to scan")
