@@ -7,7 +7,7 @@ s3_manifester is a tool that provides ability to index all files in a specific S
 
 running s3_manifester with `-h` switch provides the following usage information:
 
-```shell
+```bash
 $ ./s3_manifester -h
 Usage of ./s3_manifester:
   -akid string
@@ -47,25 +47,25 @@ Following are some examples of s3_manifester usage:
 
 - create index file for bucket "Bucket-Name" in your default account
 
-```shell
+```bash
 $ ./s3_manifester -bucket Bucket-Name
 ```
 
 - create index file for bucket "Client-Bucket" in client's account
 
-```shell
+```bash
 $ ./s3_manifester -bucket Client-Bucket -creds ClientProfile
 ```
 
 - Display list of files that have ".pdf" in their name, on the screen, for bucket "Some-Bucket" in second client's account
 
-```shell
+```bash
 $ ./s3_manifester -bucket Some-Bucket -creds SecondClient -file no -search .pdf
 ```
 
 - create index file of Third-Bucket for new customer
 
-```shell
+```bash
 $ ./s3_manifester -bucket Third-Bucket -akid My_Access_Key -secKey My_Secret_Access_Key
 ```
 
