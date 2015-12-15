@@ -26,6 +26,7 @@ var (
 	search = flag.String("search", "", "Search string to find in object paths")
 	akid = flag.String("akid", "", "AWS Access Key")
 	secKey = flag.String("seckey", "", "AWS Secret Access Key")
+	csv = flag.String("csv", "", "Create CSV log with full output")
 	t      = time.Now()
 	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
 	w = bufio.NewWriter(os.Stdout)
@@ -61,11 +62,18 @@ func main() {
 
 	if *logFile == "yes" {
 		var s string
+		var ext string
 		if *search != "" {
 			s = *search
 		}
 
-		name := dir + "/" + *bucket + "_" + s + "_" + strconv.FormatInt(t.Unix(), 10) + ".log"
+		if *csv != "" {
+			ext = ".csv"
+		} else {
+			ext = ".log"
+		}
+
+		name := dir + "/" + *bucket + "_" + s + "_" + strconv.FormatInt(t.Unix(), 10) + ext
 
 		f, err := os.Create(name)
 		if err != nil {
@@ -84,11 +92,19 @@ func main() {
 	}
 	for _, contentKeys := range topLevel.Contents {
 		switch {
-		case *search == "":
+		case *search == "" && *csv == "":
 			fmt.Fprintln(w, *contentKeys.Key)
-		case *search != "":
+		case *search != "" && *csv == "":
 			if caseInsensitiveContains(*contentKeys.Key, *search) == true {
 				fmt.Fprintln(w, *contentKeys.Key)
+			} else {
+				continue
+			}
+		case *search == "" && *csv == "yes":
+			fmt.Fprintf(w, "%s,%d,%s\n", *contentKeys.Key, *contentKeys.Size, *contentKeys.ETag)
+		case *search != "" && *csv == "yes":
+			if caseInsensitiveContains(*contentKeys.Key, *search) == true {
+				fmt.Fprintf(w, "%s,%d,%s\n", *contentKeys.Key, *contentKeys.Size, *contentKeys.ETag)
 			} else {
 				continue
 			}
@@ -138,11 +154,19 @@ func main() {
 
 	for obj := range objCh {
 		switch {
-		case *search == "":
+		case *search == "" && *csv == "":
 			fmt.Fprintln(w, *obj.Key)
-		case *search != "":
+		case *search != "" && *csv == "":
 			if caseInsensitiveContains(*obj.Key, *search) == true {
 				fmt.Fprintln(w, *obj.Key)
+			} else {
+				continue
+			}
+		case *search == "" && *csv == "yes":
+			fmt.Fprintf(w, "%s,%d,%s\n", *obj.Key, *obj.Size, *obj.ETag)
+		case *search != "" && *csv == "yes":
+			if caseInsensitiveContains(*obj.Key, *search) == true {
+				fmt.Fprintf(w, "%s,%d,%s\n", *obj.Key, *obj.Size, *obj.ETag)
 			} else {
 				continue
 			}
