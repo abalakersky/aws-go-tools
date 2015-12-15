@@ -26,7 +26,7 @@ var (
 	search = flag.String("search", "", "Search string to find in object paths")
 	akid = flag.String("akid", "", "AWS Access Key")
 	secKey = flag.String("seckey", "", "AWS Secret Access Key")
-	csv = flag.String("csv", "", "Create CSV log with full output")
+	csv = flag.String("csv", "no", "Create CSV log with full output")
 	t      = time.Now()
 	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
 	w = bufio.NewWriter(os.Stdout)
@@ -67,7 +67,7 @@ func main() {
 			s = *search
 		}
 
-		if *csv != "" {
+		if *csv != "no" {
 			ext = ".csv"
 		} else {
 			ext = ".log"
@@ -92,9 +92,9 @@ func main() {
 	}
 	for _, contentKeys := range topLevel.Contents {
 		switch {
-		case *search == "" && *csv == "":
+		case *search == "" && *csv == "no":
 			fmt.Fprintln(w, *contentKeys.Key)
-		case *search != "" && *csv == "":
+		case *search != "" && *csv == "no":
 			if caseInsensitiveContains(*contentKeys.Key, *search) == true {
 				fmt.Fprintln(w, *contentKeys.Key)
 			} else {
@@ -154,9 +154,9 @@ func main() {
 
 	for obj := range objCh {
 		switch {
-		case *search == "" && *csv == "":
+		case *search == "" && *csv == "no":
 			fmt.Fprintln(w, *obj.Key)
-		case *search != "" && *csv == "":
+		case *search != "" && *csv == "no":
 			if caseInsensitiveContains(*obj.Key, *search) == true {
 				fmt.Fprintln(w, *obj.Key)
 			} else {

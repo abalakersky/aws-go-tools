@@ -16,6 +16,8 @@ Usage of ./s3_manifester:
     	Bucket Name to list objects from. REQUIRED
   -creds string
     	Credentials Profile to use (default "default")
+  -csv string
+      	Create CSV log with full output (default "no")
   -file string
     	Save output to file instead of displaying on the screen (default "yes")
   -region string
@@ -30,7 +32,8 @@ Usage of ./s3_manifester:
 - `-bucket` - the name of the bucket to be scanned. This information is required, and is the only required option besides credentials
 - `-region` - specifies AWS region that bucket is located in. Defaults to `us-east-1` unless specified on command line
 - `-file` - by default Manifester will create a log file with the list of all files in the bucket. If wanted, this option can be specified as `no` and Manifester will display output on the screen instead
-- `-search` - profides ability to search the index and only display entries containing search string in its path
+- `-search` - provides ability to search the index and only display entries containing search string in its path
+- `-csv` - an option to output more information in csv format (to screen or to file with .csv extension) with patch, size, and etag for each object
 
 #### Credentials
 Manifester uses default shared credentials, usually configured if you have AWS CLI installed and used, [as listed here](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html). 
