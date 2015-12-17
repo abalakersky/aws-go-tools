@@ -4,7 +4,7 @@
 		{
 			"importpath": "github.com/aws/aws-sdk-go",
 			"repository": "https://github.com/aws/aws-sdk-go",
-			"revision": "999b1591218c36d5050d1ba7266eba956e65965f",
+			"revision": "9e7816464bb6044ae17fff44ce59387d2658e2cb",
 			"branch": "master"
 		},
 		{
@@ -17,8 +17,8 @@
 		{
 			"importpath": "github.com/go-ini/ini",
 			"repository": "https://github.com/go-ini/ini",
-			"revision": "9314fb0ef64171d6a3d0a4fa570dfa33441cba05",
-			"branch": "v1"
+			"revision": "467243bad6cb295e0fe72366da5ba85b069874cb",
+			"branch": "master"
 		},
 		{
 			"importpath": "github.com/jmespath/go-jmespath",
@@ -55,35 +55,35 @@
 		{
 			"importpath": "golang.org/x/tools/go/ast/astutil",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
+			"revision": "1cdaff4a02c554c9fb39dda0b56241c5f0949d91",
 			"branch": "master",
 			"path": "/go/ast/astutil"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/buildutil",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
+			"revision": "1cdaff4a02c554c9fb39dda0b56241c5f0949d91",
 			"branch": "master",
 			"path": "/go/buildutil"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/exact",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
+			"revision": "1cdaff4a02c554c9fb39dda0b56241c5f0949d91",
 			"branch": "master",
 			"path": "/go/exact"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/loader",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
+			"revision": "1cdaff4a02c554c9fb39dda0b56241c5f0949d91",
 			"branch": "master",
 			"path": "/go/loader"
 		},
 		{
 			"importpath": "golang.org/x/tools/go/types",
 			"repository": "https://go.googlesource.com/tools",
-			"revision": "c0008c5889c0d5091cdfefd2bfb08bff96527879",
+			"revision": "1cdaff4a02c554c9fb39dda0b56241c5f0949d91",
 			"branch": "master",
 			"path": "/go/types"
 		}
