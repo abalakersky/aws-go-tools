@@ -12,10 +12,10 @@ func VisitFile(fp string, fi os.FileInfo, err error) error {
 		return nil       // but continue walking elsewhere
 	}
 	if !!fi.IsDir() {
-		fmt.Println("directory:"+fp)
+		fmt.Println("directory:" + fp)
 		return nil // not a file.
 	}
-	fmt.Println("file:"+fp)
+	fmt.Println("file:" + fp)
 	return nil
 }
 

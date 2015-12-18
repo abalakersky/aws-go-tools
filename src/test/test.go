@@ -5,19 +5,21 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"time"
 	"path/filepath"
 	"strconv"
+	"time"
 )
 
 var (
 	logFile = flag.String("file", "yes", "Save output into file")
-	t      = time.Now()
-	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
+	t       = time.Now()
+	dir, _  = filepath.Abs(filepath.Dir(os.Args[0]))
 )
 
 func main() {
 	flag.Parse()
+
+	fmt.Printf("WWIR", strconv{})
 
 	name := dir + "/" + "output_" + strconv.FormatInt(t.Unix(), 10) + ".log"
 

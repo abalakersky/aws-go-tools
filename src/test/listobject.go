@@ -4,23 +4,23 @@ import (
 	"fmt"
 	"sync"
 
+	"flag"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"flag"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"strings"
 )
 
 var (
 	bucket = flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
 	region = flag.String("region", "us-east-1", "Region to connect to.")
-	creds = flag.String("creds", "default", "Credentials Profile to use")
+	creds  = flag.String("creds", "default", "Credentials Profile to use")
 	search = flag.String("search", "", "Search string to find in object paths")
 )
 
-func CaseInsesitiveContains (s, substr string) bool {
+func CaseInsesitiveContains(s, substr string) bool {
 	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
 	return strings.Contains(s, substr)
 }
@@ -32,7 +32,7 @@ func main() {
 		Credentials: credentials.NewSharedCredentials("", *creds),
 	}))
 
-//	bucket := "pso-training"
+	//	bucket := "pso-training"
 	numWorkers := 5
 
 	prefixCh := make(chan string, numWorkers)
@@ -69,8 +69,8 @@ func main() {
 func listObjectsWorker(objCh chan<- *s3.Object, prefixCh <-chan string, bucket string, svc s3iface.S3API) {
 	for prefix := range prefixCh {
 		params := &s3.ListObjectsInput{
-			Bucket: &bucket,
-			Prefix: &prefix,
+			Bucket:    &bucket,
+			Prefix:    &prefix,
 			Delimiter: aws.String("/"),
 		}
 		err := svc.ListObjectsPages(params,
@@ -82,17 +82,17 @@ func listObjectsWorker(objCh chan<- *s3.Object, prefixCh <-chan string, bucket s
 			},
 		)
 
-//		result, err := svc.ListObjectsPages(&s3.ListObjectsInput{
-//			Bucket: &bucket, Delimiter: aws.String("/"),
-//			Prefix: &prefix,
-//		}),
+		//		result, err := svc.ListObjectsPages(&s3.ListObjectsInput{
+		//			Bucket: &bucket, Delimiter: aws.String("/"),
+		//			Prefix: &prefix,
+		//		}),
 		if err != nil {
 			fmt.Println("failed to list objects by prefix", prefix, err)
 			continue
 		}
-//		for _, obj := range result.Contents {
-//			objCh <- obj
-//		}
+		//		for _, obj := range result.Contents {
+		//			objCh <- obj
+		//		}
 	}
 }
 
