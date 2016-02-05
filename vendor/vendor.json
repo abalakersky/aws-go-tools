@@ -175,14 +175,14 @@
 		{
 			"origin": "github.com/aws/aws-sdk-go/vendor/github.com/go-ini/ini",
 			"path": "github.com/go-ini/ini",
-			"revision": "2e44421e256d82ebbf3d4d4fcabe8930b905eff3",
-			"revisionTime": "2015-11-19T11:33:33-05:00"
+			"revision": "abb928e07c4108683d6b4d0b6ca08fe6bc0eee5f",
+			"revisionTime": "2015-11-19T13:49:14-08:00"
 		},
 		{
 			"origin": "github.com/aws/aws-sdk-go/vendor/github.com/jmespath/go-jmespath",
 			"path": "github.com/jmespath/go-jmespath",
-			"revision": "3433f3ea46d9f8019119e7dd41274e112a2359a9",
-			"revisionTime": "2015-11-17T09:58:22-08:00"
+			"revision": "abb928e07c4108683d6b4d0b6ca08fe6bc0eee5f",
+			"revisionTime": "2015-11-19T13:49:14-08:00"
 		},
 		{
 			"path": "github.com/pmezard/go-difflib/difflib",
