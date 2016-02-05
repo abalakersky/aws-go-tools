@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+    // Inserting using iPad, Textastic, Working Copy, and Prompt
 	t := time.Now()
 	svc := s3.New(session.New(&aws.Config{Region: aws.String("us-east-1")}))
 	result, err := svc.ListBuckets(&s3.ListBucketsInput{})
