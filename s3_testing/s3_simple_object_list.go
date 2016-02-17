@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -31,7 +32,7 @@ func main() {
 		return
 	}
 
-//	fmt.Println(result)
+	//	fmt.Println(result)
 	for _, commonPrefix := range result.CommonPrefixes {
 		fmt.Println("Directories:", *commonPrefix.Prefix)
 	}

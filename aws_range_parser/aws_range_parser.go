@@ -1,22 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"flag"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
-	"log"
 	"sort"
-	"encoding/json"
 )
 
 var (
-	region = flag.String("region", "", "Region to check on.")
-	service = flag.String("service", "", "Service to look up information for")
-	url = "https://ip-ranges.amazonaws.com/ip-ranges.json"
-	services = []string {}
-	regions = []string {}
+	region   = flag.String("region", "", "Region to check on.")
+	service  = flag.String("service", "", "Service to look up information for")
+	url      = "https://ip-ranges.amazonaws.com/ip-ranges.json"
+	services = []string{}
+	regions  = []string{}
 )
 
 type awsEntry struct {
@@ -44,8 +44,6 @@ func removeDuplicatesUnordered(elements []string) []string {
 	}
 	return result
 }
-
-
 
 func u() {
 	fmt.Printf("This script is used to display AWS specific IP ranges that could be used for Firewall or Security Group configurations. These ranges specify public IPs that AWS uses for a each public facing service.\n")
@@ -100,11 +98,11 @@ func main() {
 
 		for i := range a.Prefixes {
 			switch {
-			case *service != "" && *region != "" :
+			case *service != "" && *region != "":
 				if a.Prefixes[i].Service == *service && a.Prefixes[i].Region == *region {
 					fmt.Printf("%s\n", a.Prefixes[i].IPPrefix)
 				}
-			case *service != "" && *region == "" :
+			case *service != "" && *region == "":
 				if a.Prefixes[i].Service == *service {
 					fmt.Printf("%s\n", a.Prefixes[i].IPPrefix)
 				}
