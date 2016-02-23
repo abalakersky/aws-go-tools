@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<module type="JAVA_MODULE" version="4">
-=======
 <module type="GO_MODULE" version="4">
-<<<<<<< HEAD
-=======
->>>>>>> 0cf181a77c6788fce30341d875598405e624df37
-  <component name="GoLibraries">
-    <option name="urls">
-      <set />
-    </option>
-  </component>
->>>>>>> 4c10ee0d84cad47a2ec5baf304be5108ad8c0b2e
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
