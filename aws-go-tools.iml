@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="GO_MODULE" version="4">
+<<<<<<< HEAD
   <component name="Go">
     <option name="vendoring" value="YES" />
   </component>
+=======
+>>>>>>> 09ca93afb4faae27b95522b1d5204b20eea2e614
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$" />

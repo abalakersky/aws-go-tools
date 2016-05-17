@@ -4,11 +4,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"log"
 	"os"
 	"path/filepath"
@@ -16,20 +11,26 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 )
 
 var (
-	bucket = flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
+	bucket  = flag.String("bucket", "", "Bucket Name to list objects from. REQUIRED")
 	logFile = flag.String("file", "yes", "Save output to file instead of displaying on the screen")
-	region = flag.String("region", "us-east-1", "Region to connect to.")
-	creds  = flag.String("creds", "default", "Credentials Profile to use")
-	search = flag.String("search", "", "Search string to find in object paths")
-	akid = flag.String("akid", "", "AWS Access Key")
-	secKey = flag.String("seckey", "", "AWS Secret Access Key")
-	csv = flag.String("csv", "no", "Create CSV log with full output")
-	t      = time.Now()
-	dir, _ = filepath.Abs(filepath.Dir(os.Args[0]))
-	w = bufio.NewWriter(os.Stdout)
+	region  = flag.String("region", "us-east-1", "Region to connect to.")
+	creds   = flag.String("creds", "default", "Credentials Profile to use")
+	search  = flag.String("search", "", "Search string to find in object paths")
+	akid    = flag.String("akid", "", "AWS Access Key")
+	secKey  = flag.String("seckey", "", "AWS Secret Access Key")
+	csv     = flag.String("csv", "no", "Create CSV log with full output")
+	t       = time.Now()
+	dir, _  = filepath.Abs(filepath.Dir(os.Args[0]))
+	w       = bufio.NewWriter(os.Stdout)
 )
 
 func caseInsensitiveContains(s, substr string) bool {
@@ -59,7 +60,6 @@ func main() {
 		return
 	}
 
-
 	if *logFile == "yes" {
 		var s string
 		var ext string
@@ -82,8 +82,6 @@ func main() {
 		defer f.Close()
 		w = bufio.NewWriter(f)
 	}
-
-
 
 	topLevel, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket, Delimiter: aws.String("/")})
 	if err != nil {
@@ -139,7 +137,6 @@ func main() {
 		}
 		wg.Done()
 	}
-
 
 	for i := range prefixes {
 		prefix := prefixes[i]
