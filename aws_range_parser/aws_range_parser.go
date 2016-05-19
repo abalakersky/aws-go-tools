@@ -32,7 +32,7 @@ type awsPrefixes struct {
 func removeDuplicatesUnordered(elements []string) []string {
 	encountered := map[string]bool{}
 
-	// Create a map of all unique elements.
+	//  Create a map of all unique elements.
 	for v := range elements {
 		encountered[elements[v]] = true
 	}
