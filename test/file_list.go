@@ -23,4 +23,5 @@ func main() {
 	//specify directory below or walk through /
 	filepath.Walk("/", VisitFile)
 	fmt.Println("This is a test")
+	fmt.Println("I am testing things!")
 }
