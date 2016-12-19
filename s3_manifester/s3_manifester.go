@@ -81,6 +81,11 @@ func main() {
 		}
 		defer f.Close()
 		w = bufio.NewWriter(f)
+
+		if ext == ".csv" {
+			fmt.Fprintf(f, "%s,%s,%s,%s,%s,%s\n", "Object Name and Path", "Object Size in Bytes", "Object MD5 Sum", "Object Owner", "Last Modified Date", "Object Storage Class")
+		}
+
 	}
 
 	topLevel, err := svc.ListObjects(&s3.ListObjectsInput{Bucket: bucket, Delimiter: aws.String("/")})
@@ -99,10 +104,10 @@ func main() {
 				continue
 			}
 		case *search == "" && *csv == "yes":
-			fmt.Fprintf(w, "%s,%d,%s\n", *contentKeys.Key, *contentKeys.Size, *contentKeys.ETag)
+			fmt.Fprintf(w, "%s,%d,%s,%s,%s,%s\n", *contentKeys.Key, *contentKeys.Size, *contentKeys.ETag, *contentKeys.Owner.DisplayName, *contentKeys.LastModified, *contentKeys.StorageClass)
 		case *search != "" && *csv == "yes":
 			if caseInsensitiveContains(*contentKeys.Key, *search) == true {
-				fmt.Fprintf(w, "%s,%d,%s\n", *contentKeys.Key, *contentKeys.Size, *contentKeys.ETag)
+				fmt.Fprintf(w, "%s,%d,%s,%s,%s,%s\n", *contentKeys.Key, *contentKeys.Size, *contentKeys.ETag, *contentKeys.Owner.DisplayName, *contentKeys.LastModified, *contentKeys.StorageClass)
 			} else {
 				continue
 			}
@@ -160,10 +165,10 @@ func main() {
 				continue
 			}
 		case *search == "" && *csv == "yes":
-			fmt.Fprintf(w, "%s,%d,%s\n", *obj.Key, *obj.Size, *obj.ETag)
+			fmt.Fprintf(w, "%s,%d,%s,%s,%s,%s\n", *obj.Key, *obj.Size, *obj.ETag, *obj.Owner.DisplayName, *obj.LastModified, *obj.StorageClass)
 		case *search != "" && *csv == "yes":
 			if caseInsensitiveContains(*obj.Key, *search) == true {
-				fmt.Fprintf(w, "%s,%d,%s\n", *obj.Key, *obj.Size, *obj.ETag)
+				fmt.Fprintf(w, "%s,%d,%s,%s,%s,%s\n", *obj.Key, *obj.Size, *obj.ETag, *obj.Owner.DisplayName, *obj.LastModified, *obj.StorageClass)
 			} else {
 				continue
 			}
