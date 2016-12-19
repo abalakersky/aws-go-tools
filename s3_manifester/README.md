@@ -72,4 +72,9 @@ $ ./s3_manifester -bucket Some-Bucket -creds SecondClient -file no -search .pdf
 $ ./s3_manifester -bucket Third-Bucket -akid My_Access_Key -secKey My_Secret_Access_Key
 ```
 
+- create a CSV file with full detailed information about every file in "Client-Bucket" in client's account
+
+```bash
+$ ./s3_manifester -bucket Client-Bucket -creds ClientProfile -csv yes
+```
 
