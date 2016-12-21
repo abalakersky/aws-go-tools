@@ -5,12 +5,13 @@ import (
 	"sync"
 
 	"flag"
+	"strings"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"strings"
 )
 
 var (
@@ -20,7 +21,7 @@ var (
 	search = flag.String("search", "", "Search string to find in object paths")
 )
 
-func CaseInsesitiveContains(s, substr string) bool {
+func caseInsesitiveContains(s, substr string) bool {
 	s, substr = strings.ToUpper(s), strings.ToUpper(substr)
 	return strings.Contains(s, substr)
 }

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func VisitFile(fp string, fi os.FileInfo, err error) error {
+func visitFile(fp string, fi os.FileInfo, err error) error {
 	if err != nil {
 		fmt.Println(err) // can't walk here,
 		return nil       // but continue walking elsewhere
@@ -21,7 +21,7 @@ func VisitFile(fp string, fi os.FileInfo, err error) error {
 
 func main() {
 	//specify directory below or walk through /
-	filepath.Walk("/", VisitFile)
+	filepath.Walk("/", visitFile)
 	fmt.Println("This is a test")
 	fmt.Println("I am testing things!")
 	fmt.Println("This is very interesting")
