@@ -16,18 +16,17 @@ Usage of ./s3_manifester:
   -bucket string
     Bucket Name to list objects from. REQUIRED
   -creds string
-    Credentials Profile to use (default "default")
+    Credentials Profile to use [default "default"]
   -csv string
-    Create CSV log with full output (default "no")
+    Create CSV log with full output [default "no"]
   -file string
-    Save output to file instead of displaying on the screen (default "yes")
+    Save output to file instead of displaying on the screen [default "yes"]
   -region string
-    Region to connect to. (default "us-east-1")
+    Region to connect to. [default "us-east-1"]
   -search string
     Search string to find in object paths
   -seckey string
     AWS Secret Access Key
-
 ```
 
 - `-bucket` - the name of the bucket to be scanned. This information is required, and is the only required option besides credentials

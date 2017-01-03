@@ -3,7 +3,7 @@
 This script provides an easy, CLI based, way to display IP ranges that AWS uses for different services. Such information usually needed to configure Firewall rules.
 Instructions are available by running `aws_range_parser -h`, running `aws_range_parser` without any options, or in this document.
 
-```
+```shell
 This script is used to display AWS specific IP ranges that could be used for Firewall or Security Group configurations. These ranges specify public IPs that AWS uses for a each public facing service.
 
 Usage:

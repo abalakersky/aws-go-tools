@@ -30,3 +30,9 @@ _testmain.go
 # OS X specific
 .DS_Store
 
+/.idea/
+.idea/.name
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
