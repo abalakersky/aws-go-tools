@@ -44,7 +44,7 @@ If you do have shared credentials file Manifester will default to use `"default"
 
 If, however, you do not have shared credentials file, you can specify API credentials on the command line using options `-akid` for Access Key and `-secKey` for Secret Access Key.
 
-### Examples and Tests
+### Examples 
 
 Following are some examples of s3_manifester usage:
 
