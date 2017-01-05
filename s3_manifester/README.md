@@ -33,7 +33,7 @@ Usage of ./s3_manifester:
 - `-region` - specifies AWS region that bucket is located in. Defaults to `us-east-1` unless specified on command line
 - `-file` - by default Manifester will create a log file with the list of all files in the bucket. If wanted, this option can be specified as `no` and Manifester will display output on the screen instead
 - `-search` - provides ability to search the index and only display entries containing search string in its path
-- `-csv` - an option to output more information in csv format (to screen or to file with .csv extension) with patch, size, and etag for each object
+- `-csv` - an option to output more information in csv format (to screen or to file, see `-file` above, with .csv extension) with path, size, etag, owner, last modified date, and storage class for each object
 
 ## Credentials
 
@@ -76,4 +76,10 @@ Following are some examples of s3_manifester usage:
 
 ```bash
  ./s3_manifester -bucket Client-Bucket -creds ClientProfile -csv yes
+```
+
+- output CSV information to the screen
+
+```bash
+./s3_manifester -bucket Client-Bucket -creds ClientProfile -csv yes -file no
 ```
